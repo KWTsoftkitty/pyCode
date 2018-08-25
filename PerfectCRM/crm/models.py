@@ -189,7 +189,7 @@ class Payment(models.Model):
 
 class UserProfile(models.Model):
     '''账号表'''
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=32)
     roles = models.ManyToManyField('Role', blank=True, null=True)
 
