@@ -4,9 +4,9 @@
 # @Version : python 3.6.8 64bit
 
 
-from flask import Blueprint
+# from flask import Blueprint
 
 
-admin = Blueprint("admin", __name__)
+# admin = Blueprint("admin", __name__)
 
-import app.admin.views
+# import app.admin.views
