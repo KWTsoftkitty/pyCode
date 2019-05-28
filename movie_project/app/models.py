@@ -6,8 +6,6 @@
 import pymysql
 from datetime import datetime
 from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
-# from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -16,7 +14,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:123456@localhost/m
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 db = SQLAlchemy(app)
-# manager = Manager(db)
+
 
 # 会员数据模型
 class User(db.Model):
@@ -189,5 +187,4 @@ class Oplog(db.Model):
 
 
 if __name__ == "__main":
-    # manager.run()
     db.create_all()
