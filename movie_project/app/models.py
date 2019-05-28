@@ -3,18 +3,20 @@
 # @Author  : KangWenTao (285150572@qq.com)
 # @Version : python 3.6.8 64bit
 
-# import pymysql
+import pymysql
 from datetime import datetime
 from flask import Flask
+# from flask_sqlalchemy import SQLAlchemy
+# from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@127.0.0.1:3306/movie"
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:123456@localhost/movie?charset=utf8'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 db = SQLAlchemy(app)
-
+# manager = Manager(db)
 
 # 会员数据模型
 class User(db.Model):
@@ -187,4 +189,5 @@ class Oplog(db.Model):
 
 
 if __name__ == "__main":
+    # manager.run()
     db.create_all()
