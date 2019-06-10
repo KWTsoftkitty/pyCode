@@ -2,6 +2,7 @@ import socket
 
 
 def main():
+    '''客户端'''
     # 创建tcp socket
     tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 创建连接
