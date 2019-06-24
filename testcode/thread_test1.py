@@ -31,5 +31,6 @@ def main():
     time.sleep(1)
     print("------in mainthread g_num: %d" % g_num)
 
+
 if __name__ == '__main__':
     main()
