@@ -2,7 +2,7 @@ import socket
 
 
 def service_client(new_socket):
-    '''处理客户端请求'''
+    """处理客户端请求"""
     # 1. 接收客户端的数据
     request = new_socket.recv(1024)
     print(request)
@@ -14,11 +14,10 @@ def service_client(new_socket):
     new_socket.send(response.encode(encoding='utf_8'))
     # 关闭套接字
     new_socket.close()
-    
-    
+
 
 def main():
-    '''简单的返回固定页面的http服务器'''
+    """简单的返回固定页面的http服务器"""
     # 1. 创建套接字
     tcp_socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 2. 绑定
@@ -36,4 +35,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
