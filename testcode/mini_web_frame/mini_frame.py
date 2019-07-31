@@ -1,9 +1,11 @@
-def login():
-    return "这是登录页面"
+def center():
+    with open("./templates/center.html", encoding="utf-8") as f:
+        return f.read()
 
 
 def index():
-    return "这是主页"
+    with open("./templates/index.html", encoding="utf-8") as f:
+        return f.read()
 
 
 def application(env, start_response):
@@ -13,7 +15,7 @@ def application(env, start_response):
 
     if file_name == "/index.py":
         return index()
-    elif file_name == "/login.py":
-        return login()
+    elif file_name == "/center.py":
+        return center()
     else:
         return "Hello World! 我爱你中国......"

@@ -2,18 +2,23 @@ import socket
 import multiprocessing
 import re
 import mini_frame
+import sys
+
 
 class WSGIServer(object):
     """服务器类"""
 
-    def __init__(self):
+    def __init__(self, port, app, static_path):
         """初始化"""
         self.tcp_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.tcp_server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        self.tcp_server_socket.bind(("", 7890))
+        self.tcp_server_socket.bind(("", port))
 
         self.tcp_server_socket.listen(128)
+
+        self.application = app
+        self.static_path = static_path
 
     def run_forever(self):
         """循环处理客户端请求"""
@@ -44,7 +49,7 @@ class WSGIServer(object):
         if not file_name.endswith(".py"):
             # 请求静态资源
             try:
-                f = open("./html" + file_name, "rb")
+                f = open(self.static_path + file_name, "rb")
             except:
                 response = "HTTP/1.1 404 NOT FOUND\r\n"
                 response += "\r\n"
@@ -61,7 +66,7 @@ class WSGIServer(object):
             # 请求以.py结尾的动态资源
             env = dict()
             env["PATH_INFO"] = file_name
-            body = mini_frame.application(env, self.set_response_header)
+            body = self.application(env, self.set_response_header)
 
             header = "HTTP/1.1 %s\r\n" % self.status
 
@@ -83,7 +88,39 @@ class WSGIServer(object):
 
 def main():
     """入口函数"""
-    web_server = WSGIServer()
+    # 获取运行时参数
+    if len(sys.argv) == 3:
+        try:
+            port = int(sys.argv[1])
+            frame_app_name = sys.argv[2]
+        except Exception as e:
+            print("端口输入错误......")
+            return
+    else:
+        print("请按照以下方式运行:")
+        print("python3 xxxx.py 7890 mini_frame:application")
+        return
+
+    # 获取框架名称
+    ret = re.match(r"([^:]+):(.*)", frame_app_name)
+    if ret:
+        frame_name = ret.group(1)
+        app_name = ret.group(2)
+    else:
+        print("请按照以下方式运行:")
+        print("python3 xxxx.py 7890 mini_frame:application")
+        return
+
+    # 读取conf配置文件中的相关配置
+    with open("./web_server.conf") as f:
+        conf_info = eval(f.read())
+
+    # import导入框架
+    sys.path.append(conf_info["dynamic_path"])
+    frame = __import__(frame_name)
+    app = getattr(frame, app_name)
+
+    web_server = WSGIServer(port, app, conf_info["static_path"])
     web_server.run_forever()
 
 
