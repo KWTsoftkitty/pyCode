@@ -12,7 +12,7 @@ def test1(num):
         g_num += 1
     mutex.release()
     print("------in test1 g_num: %d" % g_num)
-
+1
 
 def test2(num):
     global g_num
