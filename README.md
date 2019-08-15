@@ -1,2 +1,0 @@
-# pyCode
-python代码
