@@ -4,9 +4,11 @@ from django.views.generic import View
 from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
+from django_redis import get_redis_connection
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
-from user.models import User
+from user.models import User, Address
+from goods.models import GoodsSKU
 from utils.mixin import LoginRequireMixin
 from celery_tasks.tasks import send_reigster_active_mail
 import re
@@ -141,12 +143,29 @@ class LogoutView(View):
         return redirect(reverse('goods:index'))
 
 
-# /user/user
+# /user
 class UserInfoView(LoginRequireMixin, View):
     '''用户中心'''
     def get(self, request):
         '''访问用户中心'''
-        return render(request, 'user_center_info.html', {'page':'user'})
+        # 显示用户基本信息
+        user = request.user
+        address = Address.objects.get_default_address(user)
+
+        # 获取用户最近浏览记录
+        # 存储在redis数据库，方式：history_userid: [goods_list]
+        conn = get_redis_connection('default')
+        history_key = 'history_%d' % user.id
+        sku_ids = conn.lrange(history_key, 0, 4)
+        goods_list = list()
+        # 遍历一次查询一次商品，以保证按照最近的浏览顺序显示最近浏览的商品
+        for id in sku_ids:
+            goods = GoodsSKU.objects.get(id=id)
+            goods_list.append(goods)
+
+        context = {'page':'user', 'address':address, 'goods':goods_list}
+
+        return render(request, 'user_center_info.html', context)
 
 
 # /user/order
@@ -157,9 +176,42 @@ class UserOrderView(LoginRequireMixin, View):
         return render(request, 'user_center_order.html', {'page':'order'})
 
 
-# /user/user
+# /user/site
 class UserAddrView(LoginRequireMixin, View):
     '''用户收货地址'''
     def get(self, request):
         '''访问用户收货地址'''
-        return render(request, 'user_center_site.html', {'page':'site'})
+        # 获取用户的默认收货地址
+        user = request.user
+        address = Address.objects.get_default_address(user)
+
+        return render(request, 'user_center_site.html', {'page':'site', 'address':address})
+
+    def post(self, request):
+        '''添加用户的收货地址'''
+        # 接收数据
+        receiver = request.POST.get('receiver')
+        addr = request.POST.get('addr')
+        zip_code = request.POST.get('zip_code')
+        phone = request.POST.get('phone')
+
+        # 校验数据
+        if not all([receiver, addr, phone]):
+            return render(request, 'user_center_site.html', {'errmsg':'地址信息不完整'})
+        if not re.match(r'^1[3|4|5|7|8][0-9]{9}$', phone):
+            return render(request, 'user_center_site.html', {'errmsg':'手机号码不合法'})
+
+        # 验证是否存在默认地址
+        user = request.user
+        address = Address.objects.get_default_address(user)
+
+        if address:
+            is_default = False
+        else:
+            is_default = True
+
+        # 提交数据
+        Address.objects.create(user=user, receiver=receiver, addr=addr, zip_code=zip_code, phone=phone, is_default=is_default)
+
+        # 返回应答
+        return redirect(reverse('user:site'))

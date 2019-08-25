@@ -174,3 +174,12 @@ SESSION_CACHE_ALIAS = "default"
 
 # 用户登录地址
 LOGIN_URL = '/user/login'
+
+# 修改文件上传使用自定义类FDFSStorage，而不是django默认的FileSystemStorage
+DEFAULT_FILE_STORAGE = 'utils.fdfs.storage.FDFSStorage'
+
+# fastdfs客户端配置文件路径
+FDFS_CLIENT_CONF = './utils/fdfs/client.conf'
+
+# nginx服务器的ip和端口
+NGINX_BASE_URL = 'http://192.168.43.131:8888/'
