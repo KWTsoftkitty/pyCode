@@ -6,9 +6,9 @@
 	<div class="breadcrumb">
 		<a href="#">全部分类</a>
 		<span>></span>
-		<a href="#">{{ sku.type.name }}</a>
+		<a href="{% url 'goods:list' sku.gtype.id 1 %}">{{ sku.gtype.name }}</a>
 		<span>></span>
-		<a href="#">商品详情</a>
+		商品详情
 	</div>
 
 	<div class="goods_detail_con clearfix">
@@ -45,7 +45,7 @@
                     {% for new_good in new_goods %}
 					<li>
 						<a href="{% url 'goods:detail' new_good.id %}"><img src="{{ new_good.image.url }}"></a>
-						<h4><a href="#">{{ new_good.name }}</a></h4>
+						<h4><a href="{% url 'goods:detail' new_good.id %}">{{ new_good.name }}</a></h4>
 						<div class="prize">￥{{ new_good.price }}</div>
 					</li>
                     {% endfor %}
@@ -81,7 +81,7 @@
 	<div class="add_jump"></div>
 {% endblock bottom %}
 {% block bottomfiles %}
-	<script type="text/javascript" src="{% static 'js/jquery-1.12.2.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
 	<script type="text/javascript">
 		var $add_x = $('#add_cart').offset().top;
 		var $add_y = $('#add_cart').offset().left;

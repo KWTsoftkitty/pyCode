@@ -24,13 +24,13 @@
 	<div class="center_con clearfix">
 		<ul class="subnav fl">
             {% for type in types %}
-			<li><a href="#model0{{ forloop.counter }}" class="{{ type.logo }}">{{ type.name }}</a></li>
+			<li><a href="{% url 'goods:list' type.id 1 %}" class="{{ type.logo }}">{{ type.name }}</a></li>
             {% endfor %}
 		</ul>
 		<div class="slide fl">
 			<ul class="slide_pics">
                 {% for banner in goods_banners %}
-				<li><a href="#"><img src="{{ banner.image.url }}" alt="幻灯片"></a></li>
+				<li><a href="{% url 'goods:detail' banner.sku.id %}"><img src="{{ banner.image.url }}" alt="幻灯片"></a></li>
                 {% endfor %}
 			</ul>
 			<div class="prev"></div>
@@ -47,18 +47,18 @@
     {% for type in types %}
 	<div class="list_model">
 		<div class="list_title clearfix">
-			<h3 class="fl" id="model0{{ forloop.counter }}">{{ type.name }}</h3>
+			<h3 class="fl" id="model0{{ forloop.counter }}"><a href="{% url 'goods:list' type.id 1 %}">{{ type.name }}</a></h3>
 			<div class="subtitle fl">
 				<span>|</span>
                 {% for banner in type.title_banners %}
-				<a href="#">{{ banner.sku.name }}</a>
+				<a href="{% url 'goods:detail' banner.sku.id %}">{{ banner.sku.name }}</a>
                 {% endfor %}
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="{% url 'goods:list' type.id 1 %}" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="{{ type.image.url }}"></div>
+            <div class="goods_banner fl"><a href="{% url 'goods:list' type.id 1 %}"><img src="{{ type.image.url }}"></a></div>
 			<ul class="goods_list fl">
                 {% for banner in type.image_banners %}
 				<li>

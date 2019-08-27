@@ -13,7 +13,7 @@ django.setup()
 from goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner
 
 # 创建一个celery实例
-app = Celery('celery_tasks.tasks', broker='redis://127.0.0.1:6379/3')
+app = Celery('celery_tasks.tasks', broker='redis://192.168.0.103:6379/3')
 
 
 # 定义任务函数

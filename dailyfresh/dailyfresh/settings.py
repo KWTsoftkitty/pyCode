@@ -87,9 +87,13 @@ DATABASES = {
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'NAME': 'dailyfresh',
         'USER': 'root',
-        'PASSWORD': 'mysql',
-        'HOST': '127.0.0.1',
-        'PORT': 3306
+        'PASSWORD': 'root',
+        'HOST': '192.168.0.103',
+        'PORT': 3306,
+        'TEST': {
+            'CHARSET' : 'utf8',
+            'COLLATION':'utf8_general_ci'
+        }
     }
 }
 
@@ -161,7 +165,7 @@ EMAIL_FROM = '天天生鲜<285150572@qq.com>'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/9",
+        "LOCATION": "redis://192.168.0.103:6379/9",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -182,4 +186,4 @@ DEFAULT_FILE_STORAGE = 'utils.fdfs.storage.FDFSStorage'
 FDFS_CLIENT_CONF = './utils/fdfs/client.conf'
 
 # nginx服务器的ip和端口
-NGINX_BASE_URL = 'http://192.168.43.131:8888/'
+NGINX_BASE_URL = 'http://192.168.0.103:8888/'
