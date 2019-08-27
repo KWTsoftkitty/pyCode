@@ -34,3 +34,17 @@ class OrderInfo(BaseModel):
         db_table = 'df_order_info'
         verbose_name = '订单'
         verbose_name_plural = verbose_name
+
+
+class OrderGoods(BaseModel):
+    '''订单商品模型类'''
+    order = models.ForeignKey('OrderInfo', verbose_name='订单')
+    sku = models.ForeignKey('goods.GoodsSKU', verbose_name='商品SKU')
+    count = models.IntegerField(default=1, verbose_name='商品数目')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='商品价格')
+    comment = models.CharField(max_length=256, default='', verbose_name='商品评论')
+
+    class Meta:
+        db_table = 'df_order_goods'
+        verbose_name = '订单商品'
+        verbose_name_plural = verbose_name
