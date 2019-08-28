@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tinymce', # 富文本编辑模块
+    'haystack', # 全文检索框架
     'user', # 用户
     'cart', # 购物车
     'goods', # 商品
@@ -187,3 +188,14 @@ FDFS_CLIENT_CONF = './utils/fdfs/client.conf'
 
 # nginx服务器的ip和端口
 NGINX_BASE_URL = 'http://192.168.0.103:8888/'
+
+# haystack全文检索框架配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+# 添加此项，当数据库改变时，会自动更新索引，非常方便
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
